@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">  
+        <ui:define name="body">
+            <h:form >
+                <h:panelGrid style=" width:100%; text-align: right"  >                 
+                    <p:commandLink styleClass="link" value="menu" action="/menu"  />                                  
+                </h:panelGrid>
+            </h:form>
+            <p/>
+            <h:form>
+                <p:commandLink styleClass="link" value="Novo Medico" 
+                               action="#{medControle.abrePopupNovo()}" 
+                               update=":popupNovo" />
+            </h:form> 
+            <p/>
+            <h:form id="formPrincipal" >
+                <p:dataTable var="med" value="#{medControle.lista}"
+                             tableStyle="width:auto;  min-width: 100%" > 
+                    <p:column headerText="Id">
+                        <h:outputText value="#{med.id}" />
+                    </p:column>                    
+                    <p:column headerText="Nome:">
+                        <h:outputText value="#{med.nome}" />
+                    </p:column>                     
+                    <p:column headerText="" style="text-align: center">
+                        <p:commandLink action="#{medControle.alterar()}" 
+                                       styleClass="link"
+                                       update=":popupAltera" type="button" value="alterar" >
+                            <f:setPropertyActionListener value="#{med}" target="#{medControle.med}" />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="" style="text-align: center">
+                        <p:commandLink styleClass="link" value="excluir"
+                                       action="#{medControle.excluir(med)}"                                             
+                                       update=":formPrincipal" >
+                            <p:confirm header="Excluir medico" 
+                                       message="Você tem certeza que deseja excluir este medico?"
+                                       icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>   
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:outputPanel style="width: 100%; text-align:center" layout="block"> 
+                        <p:commandButton value="sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:outputPanel>
+                </p:confirmDialog> 
+            </h:form>          
+
+            <p:dialog closable="false" modal="true" header="Novo Medico"
+                      id="popupNovo"
+                      visible="#{medControle.popupNovo}" >
+                <h:form id="formPopupNovo">
+                    <h:panelGrid columns="2">                        
+                        <p:outputLabel value="Nome "/>
+                        <p:inputText value="#{medControle.med.nome}" maxlength="15"
+                                     required="true" requiredMessage="Nome obrigatório"/>
+                    </h:panelGrid>
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Cancelar" action="#{medControle.fecharPopupNovo()}" 
+                                         update=":popupNovo" immediate="true" />
+                        <p:commandButton value="Confirmar" action="#{medControle.inserirMedico()}" 
+                                         update=":formPrincipal :popupNovo"/>                           
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>                      
+            
+            <p:dialog closable="false" modal="true" header="Alteração"
+                      id="popupAltera"
+                      visible="#{medControle.popupAltera}" >
+                <h:form id="formPopupAltera">
+                    <h:panelGrid columns="2">                        
+                        <p:outputLabel value="Nome "/>
+                        <p:inputText value="#{medControle.med.nome}" maxlength="30"
+                                     required="true" requiredMessage="Nome obrigatório"/>
+                    </h:panelGrid>
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Cancelar" action="#{medControle.fecharPopupAltera()}" 
+                                         update=":popupAltera" immediate="true" />
+                        <p:commandButton value="Confirmar" action="#{medControle.alterarMedico()}" 
+                                         update=":formPrincipal :popupAltera"/>                           
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+            
+            
+        </ui:define>
+    </ui:composition>
+</html>

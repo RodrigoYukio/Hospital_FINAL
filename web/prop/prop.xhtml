@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">  
+        <ui:define name="body">
+            <h:form >
+                <h:panelGrid style=" width:100%; text-align: right"  >                 
+                    <p:commandLink styleClass="link" value="menu" action="/menu"  /> 
+                </h:panelGrid>
+            </h:form>
+            <p/>
+            <h:form>
+                <p:commandLink styleClass="link" value="Novo proprietário" 
+                               action="#{propControle.abrePopupNovo() }" 
+                               update=":popupNovo" />
+            </h:form> 
+            <p/>
+            <h:form id="formPrincipal" >
+                <p:dataTable var="prop" value="#{propControle.lista}"
+                             tableStyle="width:auto;  min-width: 100%" > 
+                    <p:column headerText="Id">
+                        <h:outputText value="#{prop.id}" />
+                    </p:column>
+                    <p:column headerText="Nome:">
+                        <h:outputText value="#{prop.nome}" />
+                    </p:column>
+                    <p:column headerText="Cidade:">
+                        <h:outputText value="#{prop.cidade}" />
+                    </p:column>                     
+                    <p:column headerText="Documento:">
+                        <h:outputText value="#{prop.documento}" />
+                    </p:column>                     
+                    <p:column headerText="" style="text-align: center">
+                        <p:commandLink action="#{propControle.alterar()}" 
+                                       styleClass="link"
+                                       update=":popupAltera" type="button" value="alterar" >
+                            <f:setPropertyActionListener value="#{prop}" target="#{propControle.prop}" />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="" style="text-align: center">
+                        <p:commandLink styleClass="link" value="excluir"
+                                       action="#{propControle.excluir(prop)}"                                             
+                                       update=":formPrincipal" >
+                            <p:confirm header="Excluir Administrador" 
+                                       message="Você tem certeza que deseja excluir este Administrador?"
+                                       icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>   
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:outputPanel style="width: 100%; text-align:center" layout="block"> 
+                        <p:commandButton value="sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:outputPanel>
+                </p:confirmDialog> 
+            </h:form>
+
+
+            <p:dialog closable="false" modal="true" header="Novo Proprietário" 
+                      id="popupNovo"  visible="#{propControle.popupNovo}" >
+                <h:form id="formPopupNovo" >
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Nome:"/>
+                        <p:inputText id="campoLogin" value="#{propControle.prop.nome}" 
+                                     maxlength="10" 
+                                     required="true" requiredMessage="Nome obrigatório" > 
+                        </p:inputText>
+                        <p:outputLabel value="Cidade:"/>
+                        <p:inputText value="#{propControle.prop.cidade}" maxlength="30"
+                                     required="true" requiredMessage="Documento obrigatório"/>
+                        <p:outputLabel value="Documento:" />
+                        <p:inputText value="#{propControle.prop.documento}"
+                                    maxlength="10" 
+                                    required="true" requiredMessage="Cidade obrigatória"/>                     
+                    </h:panelGrid>
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Confirmar" action="#{propControle.inserir()}" 
+                                         update=":popupNovo, :formPrincipal"/>   
+                        
+                        <p:commandButton value="Cancelar" action="#{propControle.fecharPopupNovo}" 
+                                         update=":formPrincipal, :popupNovo" immediate="true" />
+                        
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages showIcon="false" />
+                    </p:outputPanel>  
+                </h:form>
+            </p:dialog>
+
+
+            <p:dialog closable="false" modal="true" header="Alteração"
+                      id="popupAltera"
+                      visible="#{propControle.popupAltera}" >
+                <h:form id="formPopupAltera">
+                   
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Nome "/>
+                        <p:inputText id="campoNome" value="#{propControle.prop.nome}" 
+                                     maxlength="10" > 
+                        </p:inputText>
+                        <p:outputLabel value="Cidade "/>
+                        <p:inputText value="#{propControle.prop.cidade}" maxlength="30"
+                                     required="true" requiredMessage="Nome obrigatório"/>
+                        <p:outputLabel value="Documento " />
+                        <p:inputText value="#{propControle.prop.documento}" maxlength="10" 
+                                     required="true" requiredMessage="Senha obrigatória"/>                           
+                    </h:panelGrid>
+                    
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Cancelar" action="#{propControle.fecharPopupAltera()}" 
+                                         update=":popupAltera" immediate="true" />
+                        <p:commandButton value="Confirmar" action="#{propControle.alterarProprietario()}" 
+                                         update=":formPrincipal :popupAltera"/>                           
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>

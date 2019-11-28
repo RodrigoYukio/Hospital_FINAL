@@ -1,0 +1,26 @@
+
+/* 
+    Created on : 25/09/2019, 10:22:44
+    Author     : José
+*/
+body {
+    padding: 1%; 
+    background-color: #ece5da;
+    font-size: 12px;
+}
+
+.cabecalho{
+    height: 10%; 
+    width: 100%; 
+    background-color: tomato; 
+}
+
+a{
+    text-decoration: none;
+}
+
+.link{
+    color: #00E !important;
+    border-bottom: 1px solid !important;
+    font-size: 14px;
+}

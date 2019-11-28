@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/template.xhtml">  
+    <ui:define name="body">
+    <h:form>                      
+            <h2>OPÇÕES</h2>        
+                                    
+    <h:panelGrid style=" width:100%; text-align: left"  >                     
+    <p:commandLink styleClass="link" value="Gerenciar Administradores" action="adm/adm" />                                             
+    </h:panelGrid>
+
+    <h:panelGrid style=" width:100%; text-align: left"  >                     
+    <p:commandLink styleClass="link" value="Gerenciar Proprietários" action="prop/prop" />                                             
+    </h:panelGrid>
+
+    <h:panelGrid style=" width:100%; text-align: left"  >                     
+    <p:commandLink styleClass="link" value="Gerenciar Animais" action="ani/ani" />                                             
+    </h:panelGrid>
+    
+    <h:panelGrid style=" width:100%; text-align: left"  >                     
+    <p:commandLink styleClass="link" value="Gerenciar Medicos" action="med/med" />                                             
+    </h:panelGrid>
+            
+    <h:panelGrid style=" width:100%; text-align: left"  >                     
+    <p:commandLink styleClass="link" value="Gerenciar Consultas" action="consulta/consulta" />                                             
+    </h:panelGrid>
+            
+
+                
+            
+    </h:form>
+    </ui:define>
+    </ui:composition>
+</html>

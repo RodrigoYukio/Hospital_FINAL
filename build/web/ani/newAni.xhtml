@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Hospital Veterinário</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>        
+    </h:head>
+    
+     <h:body>                                  
+         <div> 
+             <b>Hospital</b>
+         </div>
+        
+    </h:body>
+    
+    <h:body>
+        <h:form id="formPrincipal">
+            <p:outputLabel value = "Especie: " />
+            <p:inputText value = "#{newAni.ani.especie}" 
+                         required="true"
+                         maxlength="30" />
+            <p/>
+            
+            <p:outputLabel value = "Raça: " />
+            <p:inputText value = "#{newAni.ani.raça}" />            
+            <p/>
+            
+            <p:outputLabel value = "Proprietario: " />
+            <p:inputText value = "#{newAni.ani.proprietario}" />
+            <p/>
+            
+            <p:commandButton value="Salvar" 
+                             action ="#{novoProp.salvar()}"
+                             />
+            <p/>
+            <p:messages />
+            
+        </h:form>
+    </h:body>
+
+    
+   
+</html>

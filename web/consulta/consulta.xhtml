@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+          
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">  
+        <ui:define name="body">
+            <h:form >
+                <h:panelGrid style=" width:100%; text-align: right"  >                 
+                    <p:commandLink styleClass="link" value="menu" action="/menu"  /> 
+                </h:panelGrid>
+            </h:form>
+            <p/>
+            <h:form>
+                <p:commandLink styleClass="link" value="Nova Consulta" 
+                               action="#{consultaControle.abrePopupNovo()}" 
+                               update=":popupNovo" />
+            </h:form> 
+            <p/>
+            <h:form id="formPrincipal" >
+                <p:dataTable var="consulta" value="#{consultaControle.lista}"
+                             tableStyle="width:auto;  min-width: 100%" > 
+                    <p:column headerText="Id">
+                        <h:outputText value="#{consulta.id}" />
+                    </p:column>
+                    <p:column headerText="Anotação: ">
+                        <h:outputText value="#{consulta.anotacao}" />
+                    </p:column>
+                    <p:column headerText="Data: ">
+                        <h:outputText value="#{consulta.data}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Medico: ">
+                        <h:outputText value="#{consulta.medico.nome}" />
+                    </p:column>                     
+                    <p:column headerText="Animal: ">
+                        <h:outputText value="#{consulta.animal.raça}" />
+                    </p:column>
+                        <p:column headerText="" style="text-align: center">
+                        <p:commandLink action="#{consultaControle.alterar()}" 
+                                       styleClass="link"
+                                       update=":popupAltera" type="button" value="alterar" >
+                            <f:setPropertyActionListener value="#{consulta}" target="#{consultaControle.consulta}" />
+                        </p:commandLink>
+                    </p:column>
+                    <p:column headerText="" style="text-align: center">
+                        <p:commandLink styleClass="link" value="excluir"
+                                       action="#{consultaControle.excluir(consulta)}"                                             
+                                       update=":formPrincipal" >
+                            <p:confirm header="Excluir Consulta" 
+                                       message="Você tem certeza que deseja excluir este Consulta?"
+                                       icon="ui-icon-alert"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>   
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:outputPanel style="width: 100%; text-align:center" layout="block"> 
+                        <p:commandButton value="sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:outputPanel>
+                </p:confirmDialog> 
+            </h:form>
+
+
+            <p:dialog closable="false" modal="true" header="Novo Consulta" 
+                      id="popupNovo"  visible="#{consultaControle.popupNovo}" >
+                <h:form id="formPopupNovo" >
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Anotação: "/>
+                        <p:inputText value="#{consultaControle.consulta.anotacao}" maxlength="30"
+                                     required="true" requiredMessage="Nome obrigatório"/>
+                        <p:outputLabel value="Data: "/>
+                        <p:datePicker value="#{consultaControle.consulta.data}" maxlength="30"
+                                     required="true" requiredMessage="Especie obrigatório"/>                        
+                        <p:outputLabel value="Medico:  " />
+                        <p:selectOneMenu id="comboMedico" converter="medicoConverter" 
+                                 required="true" requiredMessage="Selecione um Medico"  
+                                 value="#{consultaControle.consulta.medico}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="Escolha um Medico" 
+                                  noSelectionOption="false"/>
+                        <f:selectItems value="#{consultaControle.medicos}" 
+                                   var="med"
+                                   itemValue="#{med}"
+                                   itemLabel="#{med.nome}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Animal:  " />
+                        <p:selectOneMenu id="comboAni" converter="animalConverter" 
+                                 required="true" requiredMessage="Selecione um Animal"  
+                                 value="#{consultaControle.consulta.animal}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="Escolha um Animal" 
+                                  noSelectionOption="false"/>
+                        <f:selectItems value="#{consultaControle.animais}" 
+                                   var="ani"
+                                   itemValue="#{ani}"
+                                   itemLabel="#{ani.nome}"/>
+                        </p:selectOneMenu>
+                    
+                    </h:panelGrid>
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Confirmar" action="#{consultaControle.inserir()}" 
+                                         update=":popupNovo, :formPrincipal"/>   
+                        
+                        <p:commandButton value="Cancelar" action="#{consultaControle.fecharPopupNovo}" 
+                                         update=":formPrincipal, :popupNovo" immediate="true" />
+                        
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages showIcon="false" />
+                    </p:outputPanel>  
+                </h:form>
+            </p:dialog>
+
+
+            <p:dialog closable="false" modal="true" header="Alteração"
+                      id="popupAltera"
+                      visible="#{consultaControle.popupAltera}" >
+                <h:form id="formPopupAltera">
+                   
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Nome "/>
+                        <p:inputText id="campoAnotacao" value="#{consultaControle.consulta.anotacao}" 
+                                     maxlength="10" > 
+                        </p:inputText>
+                        <p:outputLabel value="Data "/>
+                        <p:datePicker value="#{consultaControle.consulta.data}" maxlength="30"
+                                     required="true" requiredMessage="Especie obrigatório"/>
+                        <p:outputLabel value="Medico "/>                        
+                        <p:selectOneMenu id="comboMedico" converter="medicoConverter" 
+                                 required="true" requiredMessage="Selecione um proprietario"  
+                                 value="#{consultaControle.consulta.medico}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="Escolha um proprietario" 
+                                  noSelectionOption="false"/>
+                        <f:selectItems value="#{consultaControle.medicos}" 
+                                   var="med"
+                                   itemValue="#{med}"
+                                   itemLabel="#{med.nome}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="Animal: "/>                        
+                        <p:selectOneMenu id="comboAni" converter="animalConverter" 
+                                 required="true" requiredMessage="Selecione um proprietario"  
+                                 value="#{consultaControle.consulta.animal}" >
+                        <f:selectItem itemValue="#{null}" itemLabel="Escolha um proprietario" 
+                                  noSelectionOption="false"/>
+                        <f:selectItems value="#{consultaControle.animais}" 
+                                   var="ani"
+                                   itemValue="#{ani}"
+                                   itemLabel="#{ani.nome}"/>
+                        </p:selectOneMenu>
+                        
+                    </h:panelGrid>
+                    
+                    <p/>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:commandButton value="Cancelar" action="#{consultaControle.fecharPopupAltera()}" 
+                                         update=":popupAltera" immediate="true" />
+                        <p:commandButton value="Confirmar" action="#{consultaControle.alterarConsulta()}" 
+                                         update=":formPrincipal :popupAltera"/>                           
+                    </p:outputPanel>
+                    <p:outputPanel style="width: 100%; text-align:center" >
+                        <p:messages />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>
